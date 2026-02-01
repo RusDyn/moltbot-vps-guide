@@ -46,7 +46,7 @@ You need an active Claude subscription at claude.ai.
 
 ### Step 1. Buy the VPS on Contabo
 
-1. Go to Contabo and choose **VPS 10 (8 GB RAM)**.
+1. [Go to Contabo](https://www.anrdoezrs.net/oj105hz74z6MONOTRPWQUMOQUWTRUN) and choose **VPS 10 (8 GB RAM)**.
 
 2. Choose:
    * **Operating system:** Ubuntu **24.04 LTS**
@@ -406,3 +406,9 @@ tailscale status
 # Reconfigure Moltbot
 clawdbot configure
 ```
+
+---
+
+## Get a VPS
+
+[Buy a VPS at Contabo](https://www.anrdoezrs.net/oj105hz74z6MONOTRPWQUMOQUWTRUN)
