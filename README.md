@@ -1,6 +1,6 @@
-# Contabo VPS + Moltbot Setup Guide
+# Contabo VPS + OpenClaw Setup Guide
 
-Audience: non‑technical PC users. Goal: buy a cheap VPS, secure it, install Moltbot, and connect it to Telegram and Claude (subscription).
+Audience: non‑technical PC users. Goal: buy a cheap VPS, secure it, install OpenClaw, and connect it to Telegram and Claude (subscription).
 
 This guide is written for **Contabo VPS 10 (8 GB RAM)** on **Ubuntu 24.04**.
 
@@ -10,7 +10,7 @@ This guide is written for **Contabo VPS 10 (8 GB RAM)** on **Ubuntu 24.04**.
 
 * A private server (VPS) running Ubuntu 24.04.
 * Secure access using **Tailscale** (no public admin ports).
-* Moltbot installed and running as a background service.
+* OpenClaw installed and running as a background service.
 * Telegram bot connected.
 * Claude connected via your subscription.
 * Browser automation working on the VPS.
@@ -174,7 +174,7 @@ From now on, always connect using `ssh remote@TS_IP`.
 
 ---
 
-## Part 3: Install Moltbot
+## Part 3: Install OpenClaw
 
 ### Step 6. Install Claude Code CLI
 
@@ -200,9 +200,16 @@ You'll see a token like `sk-ant-xxxxxxxx`. This is saved automatically.
 
 ---
 
-### Step 7. Install Moltbot
+### Step 7. Install OpenClaw
 
-These commands install prerequisites and Moltbot. Run them one at a time.
+These commands install prerequisites and OpenClaw. Run them one at a time.
+
+**Install Node.js 22:**
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
+```
 
 **Install Homebrew:**
 
@@ -220,40 +227,37 @@ echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc && ev
 curl -fsSL https://get.pnpm.io/install.sh | sh - && source ~/.bashrc
 ```
 
-**Install Moltbot:**
+**Install OpenClaw:**
 
 ```bash
-curl -fsSL https://molt.bot/install.sh | bash
+curl -fsSL https://openclaw.ai/install.sh | bash
 ```
 
-This takes a while. Wait for it to finish.
+This installs OpenClaw and its dependencies. Wait for it to finish.
 
 ---
 
 ### Step 8. Onboarding
 
-When Moltbot finishes installing, onboarding starts automatically.
-If it doesn't, run:
+Run the interactive setup wizard:
 
 ```bash
-clawdbot onboard --install-daemon
+openclaw onboard --install-daemon
 ```
 
-Follow each screen exactly:
+The wizard guides you through configuration. Follow each screen:
 
 | Screen | What to select |
 |--------|----------------|
 | Security confirmation | **Yes** |
-| Onboarding mode | **QuickStart** |
-| Model / auth provider | **Anthropic (Claude Code CLI + API key)** |
-| Anthropic auth method | **Anthropic token** → paste your `sk-ant-...` token |
-| Token name | Leave blank, press Enter |
-| Default model | **Keep current (default)** |
-| Channel selection | **Telegram (Bot API)** → paste your Telegram bot token |
-| Skills setup | **Skip for now** |
-| Hooks | **Enable hooks** → select all three |
+| Gateway configuration | **Local** (unless you need remote access) |
+| Model / auth provider | **Anthropic** |
+| Authentication | Paste your `sk-ant-...` token from Step 6 |
+| Channel selection | **Telegram** → paste your Telegram bot token |
+| Daemon installation | **Yes** (runs as background service) |
+| Security defaults | **Enable** pairing approvals |
 
-After onboarding, Moltbot starts running automatically.
+After onboarding, OpenClaw starts running automatically as a background service.
 
 ---
 
@@ -265,10 +269,10 @@ This lets the bot browse websites.
 sudo apt update && sudo apt install -y chromium xvfb fonts-liberation libnss3 libatk-bridge2.0-0t64 libgtk-3-0t64 libxkbcommon0 libgbm1 libasound2t64
 ```
 
-Restart Moltbot:
+Restart OpenClaw:
 
 ```bash
-systemctl --user restart clawdbot-gateway.service
+systemctl --user restart openclaw-gateway.service
 ```
 
 ---
@@ -283,14 +287,16 @@ systemctl --user restart clawdbot-gateway.service
 4. On the server, run (replace CODE with your actual code):
 
 ```bash
-clawdbot pairing approve telegram CODE
+openclaw pairing approve telegram CODE
 ```
+
+**Note:** Pairing codes expire after 1 hour. If the code doesn't work, send `/start` again to get a new one.
 
 ---
 
 ### Step 11. Open the Dashboard
 
-The dashboard lets you manage Moltbot from your browser.
+The dashboard lets you manage OpenClaw from your browser.
 
 **On your PC**, open Terminal/Windows Terminal and run:
 
@@ -303,7 +309,7 @@ Keep this window open.
 **On the server**, run:
 
 ```bash
-clawdbot dashboard --no-open
+openclaw dashboard --no-open
 ```
 
 It prints a link like `http://127.0.0.1:18789/?token=...`
@@ -318,7 +324,15 @@ Copy the full link and open it in your PC's browser.
 2. Send `hi`.
 3. You should get a response.
 
-**Done!** Your Moltbot is running.
+**Verify everything is healthy:**
+
+```bash
+openclaw status
+```
+
+This shows if all services are running correctly.
+
+**Done!** Your OpenClaw is running.
 
 ---
 
@@ -326,22 +340,22 @@ Copy the full link and open it in your PC's browser.
 
 ### Bot doesn't respond
 
-Check if Moltbot is running:
+Check if OpenClaw is running:
 
 ```bash
-systemctl --user status clawdbot-gateway.service
+systemctl --user status openclaw-gateway.service
 ```
 
 View logs:
 
 ```bash
-journalctl --user -u clawdbot-gateway.service -n 100 --no-pager
+journalctl --user -u openclaw-gateway.service -n 100 --no-pager
 ```
 
 Restart it:
 
 ```bash
-systemctl --user restart clawdbot-gateway.service
+systemctl --user restart openclaw-gateway.service
 ```
 
 ### Can't open dashboard
@@ -350,7 +364,7 @@ Make sure the SSH tunnel command is still running on your PC.
 
 ### Browser tool fails
 
-Run the browser install command from Step 9 again, then restart Moltbot.
+Run the browser install command from Step 9 again, then restart OpenClaw.
 
 ---
 
@@ -377,7 +391,7 @@ In the Dashboard:
 After the bot works, you can add extra features:
 
 ```bash
-clawdbot configure
+openclaw configure
 ```
 
 Some skills need a Gemini API key. Get one at https://aistudio.google.com/app/api-keys, then:
@@ -391,20 +405,20 @@ echo 'export GEMINI_API_KEY="YOUR_KEY"' >> ~/.bashrc && source ~/.bashrc
 ## Appendix C: Useful commands
 
 ```bash
-# Check if Moltbot is running
-systemctl --user status clawdbot-gateway.service
+# Check if OpenClaw is running
+systemctl --user status openclaw-gateway.service
 
-# Restart Moltbot
-systemctl --user restart clawdbot-gateway.service
+# Restart OpenClaw
+systemctl --user restart openclaw-gateway.service
 
 # View logs
-journalctl --user -u clawdbot-gateway.service -n 100 --no-pager
+journalctl --user -u openclaw-gateway.service -n 100 --no-pager
 
 # Check Tailscale
 tailscale status
 
-# Reconfigure Moltbot
-clawdbot configure
+# Reconfigure OpenClaw
+openclaw configure
 ```
 
 ---
