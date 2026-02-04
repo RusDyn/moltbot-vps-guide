@@ -210,7 +210,10 @@ curl -fsSL https://get.pnpm.io/install.sh | sh - && source ~/.bashrc
 ```bash
 echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 pnpm i -g openclaw
+pnpm approve-builds -g
 ```
+
+Press `a` (select all), then Enter, then `y` to confirm.
 
 ---
 
@@ -350,6 +353,16 @@ Run the browser install command from Step 9 again, then restart OpenClaw.
 * Keep your tokens in a password manager.
 * Always use Tailscale to connect to your server.
 * Don't share your dashboard link.
+* Keep secrets out of the bot's reachable filesystem.
+
+**Run security audits regularly:**
+
+```bash
+openclaw security audit --deep
+openclaw security audit --fix
+```
+
+Read more: https://docs.openclaw.ai/gateway/security
 
 ---
 
