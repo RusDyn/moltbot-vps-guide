@@ -191,27 +191,24 @@ You'll see a token like `sk-ant-xxxxxxxx`. This is saved automatically.
 
 ### Step 7. Install OpenClaw
 
-**Install Node.js 22:**
+**Install Node.js 22 and pnpm:**
 
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt install -y nodejs
+curl -fsSL https://get.pnpm.io/install.sh | sh - && source ~/.bashrc
 ```
 
-**Install Homebrew** (follow the prompts, then run the second block):
+**Install Homebrew** (interactive, follow the prompts):
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
+**Configure shell and install OpenClaw:**
+
 ```bash
 echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-```
-
-**Install pnpm and OpenClaw:**
-
-```bash
-curl -fsSL https://get.pnpm.io/install.sh | sh - && source ~/.bashrc
 pnpm i -g openclaw
 ```
 
