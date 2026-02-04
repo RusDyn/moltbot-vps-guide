@@ -86,22 +86,15 @@ If you see a prompt like `root@...`, you're connected.
 
 Copy and paste each block. Wait for each to finish before running the next.
 
-**Update the system:**
+**Update system and create user "remote":**
 
 ```bash
 apt update && apt upgrade -y
-```
-
-**Create a user named "remote":**
-
-```bash
 adduser remote
 usermod -aG sudo remote
 ```
 
-It will ask you to create a password. Save it.
-
-**Allow this user to login:**
+It will ask you to create a password. Save it. Then allow this user to login:
 
 ```bash
 mkdir -p /home/remote/.ssh && cp -r /root/.ssh/* /home/remote/.ssh/ 2>/dev/null || true && chown -R remote:remote /home/remote/.ssh && chmod 700 /home/remote/.ssh && chmod 600 /home/remote/.ssh/authorized_keys 2>/dev/null || true
@@ -130,9 +123,7 @@ curl -fsSL https://tailscale.com/install.sh | sh
 sudo tailscale up
 ```
 
-After running, it shows a login link. Copy it, open in your browser, and approve the server.
-
-Then get your server's Tailscale IP:
+After running, it shows a login link. Copy it, open in your browser, and approve the server. Then get your server's Tailscale IP:
 
 ```bash
 tailscale ip -4
@@ -180,15 +171,7 @@ From now on, always connect using `ssh remote@TS_IP`.
 
 ```bash
 curl -fsSL https://claude.ai/install.sh | bash
-```
-
-```bash
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
-```
-
-**Generate a token:**
-
-```bash
 claude setup-token
 ```
 
@@ -202,8 +185,6 @@ You'll see a token like `sk-ant-xxxxxxxx`. This is saved automatically.
 
 ### Step 7. Install OpenClaw
 
-These commands install prerequisites and OpenClaw. Run them one at a time.
-
 **Install Node.js 22:**
 
 ```bash
@@ -211,7 +192,7 @@ curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt install -y nodejs
 ```
 
-**Install Homebrew:**
+**Install Homebrew** (follow the prompts, then run the second block):
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -221,19 +202,12 @@ sudo apt install -y nodejs
 echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 ```
 
-**Install pnpm:**
+**Install pnpm and OpenClaw:**
 
 ```bash
 curl -fsSL https://get.pnpm.io/install.sh | sh - && source ~/.bashrc
+pnpm i -g openclaw
 ```
-
-**Install OpenClaw:**
-
-```bash
-curl -fsSL https://openclaw.ai/install.sh | bash
-```
-
-This installs OpenClaw and its dependencies. Wait for it to finish.
 
 ---
 
