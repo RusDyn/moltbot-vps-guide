@@ -32,9 +32,15 @@ Save the Bot Token somewhere safe.
 
 ### 2. Install Tailscale on your PC
 
-1. Go to tailscale.com and download the app for your computer.
-2. Install it and sign in.
-3. Confirm Tailscale is running (you'll see its icon in your system tray/menu bar).
+**Linux/macOS:** Run in terminal:
+
+```bash
+curl -fsSL https://tailscale.com/install.sh | sh
+```
+
+**Windows:** Go to tailscale.com and download the app.
+
+Then sign in and confirm Tailscale is running (you'll see its icon in your system tray/menu bar).
 
 ### 3. Ensure you have a Claude subscription
 
